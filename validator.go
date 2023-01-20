@@ -201,6 +201,8 @@ func (v *Validator) addLengthRangeError(field string, min int, max int) *Validat
 func (v *Validator) Equal(field1 string, field2 string) *ValidationResult {
 	val1 := v.data.Get(field1)
 	val2 := v.data.Get(field2)
+	fmt.Println(val1)
+	fmt.Println(val2)
 	if val1 != val2 {
 		return v.addEqualError(field1, field2)
 	} else {
@@ -219,6 +221,16 @@ func (v *Validator) addEqualError(field1 string, field2 string) *ValidationResul
 // not match the regular expression regex.
 func (v *Validator) Match(field string, regex *regexp.Regexp) *ValidationResult {
 	if !regex.MatchString(v.data.Get(field)) {
+		return v.addMatchError(field)
+	} else {
+		return validationOk
+	}
+}
+
+// Match will add an error to the Validator if data.Values[field] does
+// not match the pattern.
+func (v *Validator) MatchString(field string, pattern string) *ValidationResult {
+	if v.data.Get(field) != pattern {
 		return v.addMatchError(field)
 	} else {
 		return validationOk
